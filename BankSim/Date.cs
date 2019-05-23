@@ -20,7 +20,7 @@ namespace BankSim
         // Return days that year
         public int DaysThisYear()
         {
-            return this.Day + this.DayTillMonth();
+            return this.Day + this.DaysTillMonth();
         }
 
         // Return days up to the month
@@ -93,8 +93,6 @@ namespace BankSim
 
         public static string CurrentDay()
         {
-            DateTime ti = DateTime.Today;
-            DateTime t = new DateTime();
             return Date.CurrentDay();
         }
 

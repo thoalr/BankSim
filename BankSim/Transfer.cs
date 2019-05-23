@@ -19,5 +19,13 @@ namespace BankSim
         {
 
         }
+
+        public Transfer(int a, DateTime t)
+        {
+            this.Amount = a;
+            this.DateTime = t;
+        }
+
+
     }
 }

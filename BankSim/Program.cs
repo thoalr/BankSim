@@ -8,6 +8,15 @@ namespace BankSim
 {
     class Program
     {
+        struct TransferS
+        {
+            int Amount;
+            DateTime DateTime;
+        };
+
+        List<DateTime> datelist = new List<DateTime>();
+        List<TimeSpan> timeSpans = new List<TimeSpan>();
+
 
         static void InterestCalc(double sum, double interest, double addedM, double takenW)
         {
@@ -88,6 +97,8 @@ namespace BankSim
 
 
             //InterestCalc(8E5, 0.012, 220000, 14000);
+
+            
 
             bool cont = true;
 
