@@ -8,7 +8,7 @@ namespace BankSim
 {
     class Transfer
     {
-        int Amount;
+        double Amount;
         DateTime DateTime;
 
         bool Repeat;
@@ -20,7 +20,7 @@ namespace BankSim
 
         }
 
-        public Transfer(int a, DateTime t)
+        public Transfer(double a, DateTime t)
         {
             this.Amount = a;
             this.DateTime = t;

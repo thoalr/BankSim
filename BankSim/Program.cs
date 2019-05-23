@@ -10,15 +10,25 @@ namespace BankSim
     {
         struct TransferS
         {
-            int Amount;
-            DateTime DateTime;
+            public double Amount;
+            public DateTime DateTime;
+
+            public TransferS(double a, DateTime d)
+            {
+                this.Amount = a;
+                this.DateTime = d;
+            }
+            public override String ToString()
+            {
+                return this.Amount.ToString() + this.DateTime.ToString();
+            }
         };
 
-        List<DateTime> datelist = new List<DateTime>();
-        List<TimeSpan> timeSpans = new List<TimeSpan>();
+        static List<TransferS> transferlist = new List<TransferS>();
+        static List<TimeSpan> timeSpans = new List<TimeSpan>();
 
 
-        static void InterestCalc(double sum, double interest, double addedM, double takenW)
+        static void InterestCalc(double sum, double interest)
         {
             Console.WriteLine("\n\n-----------------------------------------------------------\n\n");
 
@@ -40,15 +50,11 @@ namespace BankSim
             {
                 if (i % month == 0)
                 {
-                    sum += addedM;
-                    Added += addedM;
                     //month = (month == 30) ? 31 : 30;
                 }
 
                 if (i % 7 == 0)
                 {
-                    sum -= takenW;
-                    takenOff -= takenW;
                 }
 
                 accInterest += sum * perDay;
@@ -70,69 +76,94 @@ namespace BankSim
 
         static void Main(string[] args)
         {
-            //Console.WriteLine("Welcome please enter the name of your preferred bank.");
-            //String bankname = Console.ReadLine();
-            //Console.WriteLine();
-
-            // Find saved bank or create new if there is no saved bank
-
-            //Bank bank = new Bank(bankname);
-
-            // Load saved bank information
-
-
-            // Display menu
-            //bank.WriteMenu();
-
-            //String val = Console.ReadLine();
-
-
-
-            // Try it out
-
-            //InterestCalc(4.3E6, 0.023, 220000, 14000);
-
-
-            //InterestCalc(3.5E6, 0.039, 0, 0);
-
-
-            //InterestCalc(8E5, 0.012, 220000, 14000);
-
-            
+            //bank.Menu();
 
             bool cont = true;
 
-            while(cont) 
+            while (cont)
             {
                 Console.Write("Write in the initial sum: ");
                 double sum = 0;
                 if (!Double.TryParse(Console.ReadLine(), out sum)) Console.WriteLine("Could not convert String to Double");
+                transferlist.Add(new TransferS(sum, new DateTime(2019, 1, 1)));
 
                 Console.Write("Write in the interest rate: ");
                 double interest = 0;
                 if (!Double.TryParse(Console.ReadLine(), out interest)) Console.WriteLine("Could not convert String to Double");
 
-                Console.Write("Write in the amount to be added monthly: ");
-                double addedM = 0;
-                if (!Double.TryParse(Console.ReadLine(), out addedM)) Console.WriteLine("Could not convert String to Double");
+                bool addTransfer = true;
+                // Add Monthly transfers
+                do
+                {
+                    TransferS t = new TransferS();
+                    int day = 1;
+                    try
+                    {
+                        Console.Write("Add a monthly transfer: [amount (day of month)]");
 
-                Console.Write("Write in the amount to be subtracted weekly: ");
-                double takenW = 0;
-                if (!Double.TryParse(Console.ReadLine(), out takenW)) Console.WriteLine("Could not convert String to Double");
+                        t.Amount = int.Parse( Console.ReadLine());
+                        }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        Console.WriteLine("An error occured try again.");
+                        continue;
+                    }
+                    // Add monthly 
+                    for(int i = 1; i <= 12; i++)
+                    {
+                        t.DateTime = new DateTime(2019, i, 1);
+                        transferlist.Add(t);
+                    }
+                    foreach (TransferS item in transferlist) Console.WriteLine(item);
 
-                InterestCalc(sum, interest, addedM, takenW);
+                    Console.Write("Do you want to add another transfer? [Y/N] ");
+                    addTransfer = (Console.ReadLine().ToLower() == "y");
 
-                Console.Write("Do you want to go again? (True/False)");
-                if (!bool.TryParse(Console.ReadLine(), out cont)) {
-                    cont = false;
-                    Console.WriteLine("Could not convert String to bool. Program will terminate.");
-                }
+                } while (addTransfer);
+
+                // Add miscealleanious transfers
+                addTransfer = true;
+                do
+                {
+                    TransferS t = new TransferS();
+                    try
+                    {
+                        Console.Write("Add a transfer: [amount dd.mm]");
+                        String[] s = Console.ReadLine().Split(' ');
+                        Double.TryParse(s[0], out t.Amount);
+                        String[] d = (s[1]).Split('.');
+                        int[] di = new int[] { int.Parse(d[0]), int.Parse(d[1]) };
+                        t.DateTime = new DateTime(2019, di[1], di[0]);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        Console.WriteLine("An error occured try again.");
+                        continue;
+                    }
+                    transferlist.Add(t);
+
+                    foreach (TransferS item in transferlist) Console.WriteLine(item);
+
+                    Console.Write("Do you want to add another transfer? (Y/N) ");
+                    addTransfer = (Console.ReadLine().ToLower() == "y");
+
+                } while (addTransfer);
+
+                InterestCalc(sum, interest);
+
+                Console.Write("Do you want to go again? (Y/N)");
+                cont = (Console.ReadLine().ToLower() == "y");
+            }
 
 
-                }
+            Console.Write("Do you want to go again? [Y/N] ");
+            cont = (Console.ReadLine().ToLower() == "y");
+
 
             Console.ReadLine();
-            
+
 
 
         }
