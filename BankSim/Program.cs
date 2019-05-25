@@ -25,8 +25,6 @@ namespace BankSim
         };
 
         static List<TransferS> transferlist = new List<TransferS>();
-        static List<TimeSpan> timeSpans = new List<TimeSpan>();
-
 
         static void InterestCalc(double sum, double interest)
         {
@@ -93,16 +91,20 @@ namespace BankSim
 
                 bool addTransfer = true;
                 // Add Monthly transfers
-                do
+                Console.Write("Do you want to add a monthly transfer? [Y/N] ");
+                addTransfer = (Console.ReadLine().ToUpper() == "Y");
+                while (addTransfer)
                 {
                     TransferS t = new TransferS();
                     int day = 1;
                     try
                     {
-                        Console.Write("Add a monthly transfer: [amount (day of month)]");
+                        Console.Write("Add a monthly transfer: [amount (day of month (max 28))]");
 
-                        t.Amount = int.Parse( Console.ReadLine());
-                        }
+                        String[] s = Console.ReadLine().Split(' ');
+                        Double.TryParse(s[0], out t.Amount);
+                        day = int.Parse(s[0]);
+                    }
                     catch (Exception e)
                     {
                         Console.WriteLine(e);
@@ -112,19 +114,60 @@ namespace BankSim
                     // Add monthly 
                     for(int i = 1; i <= 12; i++)
                     {
-                        t.DateTime = new DateTime(2019, i, 1);
+                        t.DateTime = new DateTime(2019, i, day);
                         transferlist.Add(t);
                     }
                     foreach (TransferS item in transferlist) Console.WriteLine(item);
 
                     Console.Write("Do you want to add another transfer? [Y/N] ");
-                    addTransfer = (Console.ReadLine().ToLower() == "y");
+                    addTransfer = (Console.ReadLine().ToUpper() == "Y");
 
-                } while (addTransfer);
+                }
+
+                // Add weekly transfer
+                addTransfer = true;
+                Console.Write("Do you want to add a weekly transfer? [Y/N] ");
+                addTransfer = (Console.ReadLine().ToUpper() == "Y");
+                while (addTransfer)
+                {
+                    TransferS t = new TransferS();
+                    DateTime date;
+                    try
+                    {
+                        Console.Write("Add a weekly transfer: [amount (starting date dd.mm)]");
+
+                        String[] s = Console.ReadLine().Split(' ');
+                        Double.TryParse(s[0], out t.Amount);
+                        String[] d = (s[1]).Split('.');
+                        int[] di = new int[] { int.Parse(d[0]), int.Parse(d[1]) };
+                        date = new DateTime(2019, di[1], di[0]);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        Console.WriteLine("An error occured try again.");
+                        continue;
+                    }
+                    // Add monthly 
+                    do
+                    {
+                        t.DateTime = date;
+                        transferlist.Add(t);
+                        date = date.AddDays(7);
+                    } while (date.DayOfYear < 365);
+
+                    foreach (TransferS item in transferlist) Console.WriteLine(item);
+
+                    Console.Write("Do you want to add another transfer? [Y/N] ");
+                    addTransfer = (Console.ReadLine().ToUpper() == "Y");
+
+                }
 
                 // Add miscealleanious transfers
                 addTransfer = true;
-                do
+                Console.Write("Do you want to add a one time transfer? [Y/N] ");
+                addTransfer = (Console.ReadLine().ToUpper() == "Y");
+                while (addTransfer)
                 {
                     TransferS t = new TransferS();
                     try
@@ -147,19 +190,19 @@ namespace BankSim
                     foreach (TransferS item in transferlist) Console.WriteLine(item);
 
                     Console.Write("Do you want to add another transfer? (Y/N) ");
-                    addTransfer = (Console.ReadLine().ToLower() == "y");
+                    addTransfer = (Console.ReadLine().ToUpper() == "Y");
 
-                } while (addTransfer);
+                }
 
                 InterestCalc(sum, interest);
 
                 Console.Write("Do you want to go again? (Y/N)");
-                cont = (Console.ReadLine().ToLower() == "y");
+                cont = (Console.ReadLine().ToUpper() == "Y");
             }
 
 
             Console.Write("Do you want to go again? [Y/N] ");
-            cont = (Console.ReadLine().ToLower() == "y");
+            cont = (Console.ReadLine().ToUpper() == "Y");
 
 
             Console.ReadLine();
