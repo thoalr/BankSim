@@ -87,7 +87,49 @@ namespace BankSim
 
                 transferlist = JsonConvert.DeserializeObject<List<TransferS>>(file);
             }
+        }
 
+        static void saveTransferFile()
+        {
+
+        }
+
+        static void saveInterestFile()
+        {
+
+        }
+
+        static int MainMenu()
+        {
+            Console.WriteLine("-----------------------------");
+            Console.WriteLine("   Select your choice        ");
+            Console.WriteLine("-----------------------------");
+            Console.WriteLine("1: Add Transfer              ");
+            Console.WriteLine("2: Add Weekly Transfer       ");
+            Console.WriteLine("3: Add Monthly Transfer      ");
+            Console.WriteLine("4: Add Time Interval Transfer");
+            Console.WriteLine("5: List Transfers            ");
+            Console.WriteLine("6: Delete Transfer           ");
+            Console.WriteLine("7: Calculate Interest        ");
+
+            int s = 0;
+            try
+            {
+                s = int.Parse(Console.ReadLine());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            } Console.ReadLine();
+
+
+            return 0;
+        }
+
+        static void TransferMenu()
+        {
+            Console.WriteLine("Write in the format [Amount dd.mm.yyyy]");
         }
         
 
@@ -169,7 +211,7 @@ namespace BankSim
                         Console.WriteLine("An error occured try again.");
                         continue;
                     }
-                    // Add monthly 
+                    // Add weekly
                     do
                     {
                         t.DateTime = date;
@@ -215,7 +257,14 @@ namespace BankSim
 
                 }
 
+                Console.Write("Do you want to save the entered transfesr? (Y/N) ");
+                if (Console.ReadLine().ToUpper() == "Y") saveTransferFile();
+
                 InterestCalc(sum, interest);
+
+                Console.Write("Do you want to save the calculated interest? (Y/N) ");
+                if (Console.ReadLine().ToUpper() == "Y") saveInterestFile();
+
 
                 Console.Write("Do you want to go again? (Y/N)");
                 cont = (Console.ReadLine().ToUpper() == "Y");
