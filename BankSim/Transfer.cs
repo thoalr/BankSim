@@ -8,22 +8,41 @@ namespace BankSim
 {
     class Transfer
     {
-        double Amount;
-        DateTime DateTime;
+        public double Amount = 0;
+        public DateTime DateTime;
 
-        bool Repeat;
-        int RepeatInDays;
-
-
-        public Transfer()
+        public enum Type
         {
+            Single,
+            Weekly,
+            Monthly,
+            ReapetInDays
+        }
+        public Type type;
 
+        public int RepeatDays = 0;
+
+
+        public Transfer(double amount, DateTime datetime, int repeatDays)
+        {
+            this.Amount = amount;
+            this.DateTime = datetime;
+            this.type = Type.ReapetInDays;
+            this.RepeatDays = repeatDays;
         }
 
-        public Transfer(double a, DateTime t)
+        public Transfer(double amount, DateTime datetime, Type type)
         {
-            this.Amount = a;
-            this.DateTime = t;
+            this.Amount = amount;
+            this.DateTime = datetime;
+            this.type = type;
+        }
+
+        public Transfer(double amount, DateTime datetime)
+        {
+            this.Amount = amount;
+            this.DateTime = datetime;
+            this.type = Type.Single;
         }
 
 

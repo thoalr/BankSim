@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace BankSim
 {
@@ -72,9 +74,28 @@ namespace BankSim
             Console.WriteLine("\n\n-----------------------------------------------------------\n\n");
         }
 
+
+        static void loadTransferFile(string[] args)
+        {
+            if (args.Length == 0) return;
+
+            if(File.Exists(args[0]))
+            {
+                String file = File.ReadAllText(args[0]);
+
+                JsonConvert.SerializeObject
+
+                transferlist = JsonConvert.DeserializeObject<List<TransferS>>(file);
+            }
+
+        }
+        
+
         static void Main(string[] args)
         {
             //bank.Menu();
+
+            loadTransferFile(args);
 
             bool cont = true;
 
@@ -199,11 +220,6 @@ namespace BankSim
                 Console.Write("Do you want to go again? (Y/N)");
                 cont = (Console.ReadLine().ToUpper() == "Y");
             }
-
-
-            Console.Write("Do you want to go again? [Y/N] ");
-            cont = (Console.ReadLine().ToUpper() == "Y");
-
 
             Console.ReadLine();
 
