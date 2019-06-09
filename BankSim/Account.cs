@@ -27,8 +27,8 @@ namespace BankSim
 
         public void AddTransfer()
         {
-            Transfer t = new Transfer();
-            this.Transfers.Add(t);
+            //Transfer t = new Transfer();
+            //this.Transfers.Add(t);
         }
 
         public void WriteMenu()
