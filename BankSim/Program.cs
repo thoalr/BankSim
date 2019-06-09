@@ -177,6 +177,7 @@ namespace BankSim
 
         static void DisplayTransfers()
         {
+            transfers.Sort();
             Console.WriteLine("\n\n----------------------");
             foreach (Transfer item in transfers) Console.WriteLine(item);
             Console.WriteLine("----------------------\n");
@@ -206,7 +207,7 @@ namespace BankSim
                 Console.WriteLine("-6: Delete Transfer           ");
                 Console.WriteLine(" 7: Calculate Interest        ");
                 Console.WriteLine(" 8: Save Transfers            ");
-                Console.WriteLine("-9: Load Transfers            ");
+                Console.WriteLine(" 9: Load Transfers            ");
                 Console.WriteLine("------------------------------");
                 Console.WriteLine("-a: Calculate Basic Interest  ");
                 Console.WriteLine(" x: Exit                      ");
@@ -241,13 +242,26 @@ namespace BankSim
                         DisplayTransfers();
                         Console.ReadLine();
                         break;
-
+                    case '7':
+                        Console.Write("Enter [interest (end date) (opt: filname to save to)]: ");
+                        String[] input = Console.ReadLine().Split(' ');
+                        // ending date
+                        String[] d = (input[1]).Split('.');
+                        int[] di = new int[] { int.Parse(d[0]), int.Parse(d[1]), int.Parse(d[2]) };
+                        DateTime ed = new DateTime(di[2], di[1], di[0]);
+                        Transfer.CalculateInterest(transfers, Double.Parse(input[0]), ed, defaultPath);
+                        break;
                     case '8':
                         Console.WriteLine("Enter the name of the file to save to:");
                         String name = Console.ReadLine();
                         Transfer.saveTransferFile(transfers, defaultPath + name);
                         break;
-                    
+                    case '9':
+                        Console.WriteLine("Enter the name of the file to load:");
+                        String namer = Console.ReadLine();
+                        Transfer.loadTransferFile(new String[] { defaultPath + namer }, out transfers);
+                        break;
+
                     case 'x':
                         cont = false;
                         break;

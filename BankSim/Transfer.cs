@@ -34,45 +34,52 @@ namespace BankSim
             Console.WriteLine("\nThe interest per day is:\n" + perDay);
             log.Add("\nThe interest per day is:\n" + perDay);
 
+
             double accInterest = 0;  // accumulated interest
 
             // Earliest date
-            DateTime count = transfers[0].DateTime;
-            DateTime newYear = new DateTime(count.Year + 1, 1, 1);
+            DateTime prevDate = transfers[0].DateTime;
+            DateTime newYear = new DateTime(prevDate.Year + 1, 1, 1);
 
             foreach(Transfer t in transfers)
             {
-                Money += t.Amount;
-
                 if (t.DateTime >= newYear)
                 {
-                    TimeSpan d2 = newYear - count;
+                    TimeSpan d2 = newYear - prevDate;
                     accInterest += Money * perDay * (int)d2.TotalDays;
 
                     Console.WriteLine("Interest at end of year: " + accInterest);
                     log.Add("Interest at end of year: " + accInterest);
 
                     Money += accInterest;
+                    Console.WriteLine("Toatal money at end of year: " + Money);
+                    log.Add("Toatal money at end of year: " + Money);
+
                     d2 = t.DateTime - newYear;
                     accInterest = Money * perDay * (int)d2.TotalDays;
+                    Money += t.Amount;
                     newYear.AddYears(1);
                 }
                 else
                 {
-                    TimeSpan d1 = t.DateTime - count;
+                    TimeSpan d1 = t.DateTime - prevDate;
                     accInterest += Money * perDay * (int)d1.TotalDays;
-                    count = t.DateTime;
+                    Money += t.Amount;
+
+                    prevDate = t.DateTime;
                 }
+                Console.WriteLine("Date: " + t.DateTime + "  Money: " +  Money);
+                log.Add("Date: " + t.DateTime + "  Money: " + Money);
             }
 
-            TimeSpan d = endDate - count;
+            TimeSpan d = endDate - prevDate;
             accInterest = Money * perDay * (int)d.TotalDays;
             Money += accInterest;
 
             Console.WriteLine("Total Money: " + Money);
             log.Add("Total Money: " + Money);
-            saveInterestFile(log,filepath);
-
+            //saveInterestFile(log,filepath);
+            //return log;
         }
 
 
@@ -114,12 +121,17 @@ namespace BankSim
 
         public int CompareTo(object obj)
         {
-            return DateTime.CompareTo(obj);
+            if (obj == null) return 1;
+            Transfer objT = obj as Transfer;
+            if ( objT != null)
+                return this.DateTime.CompareTo(objT.DateTime);
+            else
+                throw new ArgumentException("Object is not a Transfer");
         }
 
         public override String ToString()
         {
-            return this.DateTime.ToString() + " " + this.Amount.ToString();
+            return "Date: " + this.DateTime.ToString() + "  Money:" + this.Amount.ToString();
         }
 
     }
